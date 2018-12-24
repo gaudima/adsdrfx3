@@ -14,17 +14,25 @@
 ## installation root directory path.
 ##
 
-FX3FWROOT=../..
-FX3PFWROOT=../../u3p_firmware
+FX3FWROOT=$(FX3_INSTALL_PATH)
 
 all:compile
 
-include $(FX3FWROOT)/common/fx3_build_config.mak
+include $(FX3FWROOT)/fw_build/fx3_fw/fx3_build_config.mak
 
-MODULE = cyfxslfifosync
+MODULE = adsdrfx3
 
-SOURCE += $(MODULE).c
-SOURCE += cyfxslfifousbdscr.c
+SOURCE= cyfxslfifosync.c 		\
+	cyfxslfifousbdscr.c	\
+	cyfxtx.c \
+	cyfxspi_bb.c \
+	spi_patch.c
+
+ifeq ($(CYFXBUILD),arm)
+SOURCE_ASM=cyfx_startup.S
+else
+SOURCE_ASM=cyfx_gcc_startup.S
+endif
 
 C_OBJECT=$(SOURCE:%.c=./%.o)
 A_OBJECT=$(SOURCE_ASM:%.S=./%.o)
@@ -34,7 +42,16 @@ EXES = $(MODULE).$(EXEEXT)
 $(MODULE).$(EXEEXT): $(A_OBJECT) $(C_OBJECT)
 	$(LINK)
 
-$(C_OBJECT) : %.o : %.c cyfxslfifosync.h cyfxgpif_syncsf.h
+cyfxtx.c:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfxtx.c .
+
+cyfx_startup.S:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfx_startup.S .
+
+cyfx_gcc_startup.S:
+	cp $(FX3FWROOT)/fw_build/fx3_fw/cyfx_gcc_startup.S .
+
+$(C_OBJECT) : %.o : %.c
 	$(COMPILE)
 
 $(A_OBJECT) : %.o : %.S
@@ -44,6 +61,8 @@ clean:
 	rm -f ./$(MODULE).$(EXEEXT)
 	rm -f ./$(MODULE).map
 	rm -f ./*.o
+	rm -f cyfxtx.c cyfx_startup.S cyfx_gcc_startup.S
+
 
 compile: $(C_OBJECT) $(A_OBJECT) $(EXES)
 

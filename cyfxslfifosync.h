@@ -29,7 +29,7 @@
 #include "cyu3usbconst.h"
 #include "cyu3externcstart.h"
 
-#define CY_FX_BULKSRCSINK_DMA_BUF_COUNT      (6)                       /* Bulk channel buffer count */
+#define CY_FX_BULKSRCSINK_DMA_BUF_COUNT      (4)                       /* Bulk channel buffer count */
 #define CY_FX_BULKSRCSINK_DMA_TX_SIZE        (0)                       /* DMA transfer size is set to infinite */
 #define CY_FX_BULKSRCSINK_THREAD_STACK       (0x1000)                  /* Bulk loop application thread stack size */
 #define CY_FX_BULKSRCSINK_THREAD_PRIORITY    (8)                       /* Bulk loop application thread priority */
@@ -48,9 +48,11 @@
 
 #define CY_FX_EP_PRODUCER               0x01    /* EP 1 OUT */
 #define CY_FX_EP_CONSUMER               0x81    /* EP 1 IN */
+#define CY_FX_EP_DEBUG                  0x82    /* EP 2 IN */
 
 #define CY_FX_EP_PRODUCER_SOCKET        CY_U3P_UIB_SOCKET_PROD_1    /* Socket 1 is producer */
 #define CY_FX_EP_CONSUMER_SOCKET        CY_U3P_UIB_SOCKET_CONS_1    /* Socket 1 is consumer */
+#define CY_FX_EP_DEBUG_SOCKET           CY_U3P_UIB_SOCKET_CONS_2    /* Socket 1 is consumer */
 
 /* Used with FX3 Silicon. */
 #define CY_FX_PRODUCER_PPORT_SOCKET    CY_U3P_PIB_SOCKET_0    /* P-port Socket 0 is producer */
